@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GE Lottery Sort :)</title>
+  <!-- Bootstrap 5 CSS (integrity attributes removed) -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <style>
+    body {
+      background-color: #f1f5f9;
+      font-family: Arial, sans-serif;
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+    }
+    .card-output {
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 0.95rem;
+      min-height: 120px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <!-- Header -->
+        <div class="bg-primary text-white py-3 rounded-top shadow-sm">
+          <h1 class="mb-0 text-center">GE Lottery Sort :)</h1>
+        </div>
+
+        <!-- Input Section -->
+        <div class="card shadow-sm mb-3">
+          <div class="card-body">
+            <div class="form-floating mb-3">
+              <textarea
+                class="form-control"
+                placeholder=""
+                id="input"
+                style="height: 150px"
+              ></textarea>
+              <label for="input">Paste Your List Here</label>
+            </div>
+            <button id="sortBtn" class="btn btn-success w-100">
+              Sort Entries
+            </button>
+          </div>
+        </div>
+
+        <!-- Output Section -->
+        <div class="card shadow-sm rounded-bottom">
+          <div class="card-header bg-secondary text-white">
+            Sorted Results
+          </div>
+          <div class="card-body card-output" id="output">
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap 5 JS Bundle (integrity attributes removed) -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+  ></script>
+
+  <script>
+    document.getElementById('sortBtn').addEventListener('click', () => {
+      const raw = document.getElementById('input').value.trim();
+      const lines = raw.split('\n');
+      const entries = [];
+
+      lines.forEach((line) => {
+        const trimmed = line.trim();
+        if (!trimmed) return;
+
+        const digitPattern = /\b([0-9]{1,2})\b/g;
+        const matches = [...trimmed.matchAll(digitPattern)];
+        if (matches.length === 0) return;
+
+        const lastMatch = matches[matches.length - 1];
+        const num = parseInt(lastMatch[1], 10);
+        const idx = lastMatch.index;
+
+        let namePart = trimmed.slice(0, idx).trim();
+        namePart = namePart.replace(/[-.\s]+$/, '').trim();
+        if (!namePart || namePart.length > 30) return;
+
+        entries.push({ name: namePart, value: num });
+      });
+
+      entries.sort((a, b) => a.value - b.value);
+
+      const outputLines = entries.map(
+        (e) => `${e.name} - ${String(e.value).padStart(2, '0')}`
+      );
+      document.getElementById('output').textContent =
+        outputLines.join('\n') || 'No valid entries found.';
+    });
+  </script>
+</body>
+</html>
