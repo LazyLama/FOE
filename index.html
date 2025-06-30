@@ -2,105 +2,626 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>GE Lottery Sort :)</title>
-  <!-- Bootstrap 5 CSS (integrity attributes removed) -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>GE Lottery Sort</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <style>
-    body {
-      background-color: #f1f5f9;
-      font-family: Arial, sans-serif;
-      padding-top: 2rem;
-      padding-bottom: 2rem;
+    :root {
+      --md-sys-color-primary: #BB86FC;
+      --md-sys-color-primary-container: #4A148C;
+      --md-sys-color-secondary: #03DAC6;
+      --md-sys-color-tertiary: #FF0266;
+      --md-sys-color-surface: #121212;
+      --md-sys-color-surface-variant: #1E1E1E;
+      --md-sys-color-surface-container: #262626;
+      --md-sys-color-surface-container-high: #2C2C2C;
+      --md-sys-color-on-surface: #E1E1E1;
+      --md-sys-color-on-surface-variant: #C7C7C7;
+      --md-sys-color-outline: #8B8B8B;
+      --md-sys-color-outline-variant: #434343;
+      
+      --md-sys-elevation-1: 0 2px 4px rgba(0, 0, 0, 0.5);
+      --md-sys-elevation-2: 0 4px 8px rgba(0, 0, 0, 0.5);
+      --md-sys-elevation-3: 0 8px 16px rgba(0, 0, 0, 0.5);
+      --md-sys-elevation-4: 0 12px 24px rgba(0, 0, 0, 0.6);
+      
+      --md-sys-shape-corner-large: 24px;
+      --md-sys-shape-corner-medium: 16px;
+      --md-sys-shape-corner-small: 8px;
+      
+      --md-sys-motion-standard: cubic-bezier(0.4, 0.0, 0.2, 1);
+      --md-sys-motion-emphasized: cubic-bezier(0.2, 0.0, 0, 1.0);
     }
-    .card-output {
-      white-space: pre-wrap;
-      font-family: monospace;
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--md-sys-color-surface);
+      color: var(--md-sys-color-on-surface);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .background-gradient {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, #BB86FC20 0%, #03DAC620 50%, #FF026620 100%);
+      opacity: 0.3;
+      z-index: 0;
+    }
+
+    .background-gradient::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 20% 30%, #BB86FC40 0%, transparent 50%),
+                  radial-gradient(circle at 80% 70%, #03DAC640 0%, transparent 50%),
+                  radial-gradient(circle at 50% 50%, #FF026640 0%, transparent 70%);
+      animation: rotate 30s linear infinite;
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(18, 18, 18, 0.8);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border-bottom: 1px solid var(--md-sys-color-outline-variant);
+      padding: 1rem;
+    }
+
+    .header-content {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, var(--md-sys-color-primary) 0%, var(--md-sys-color-tertiary) 100%);
+      border-radius: var(--md-sys-shape-corner-medium);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      box-shadow: var(--md-sys-elevation-2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .logo-icon::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--md-sys-color-on-surface);
+      letter-spacing: -0.5px;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .surface-container {
+      background: var(--md-sys-color-surface-container);
+      border-radius: var(--md-sys-shape-corner-large);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--md-sys-elevation-1);
+      border: 1px solid var(--md-sys-color-outline-variant);
+      position: relative;
+      overflow: hidden;
+      transition: all 300ms var(--md-sys-motion-standard);
+    }
+
+    .surface-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(187, 134, 252, 0.05) 0%, transparent 50%);
+      opacity: 0;
+      transition: opacity 300ms var(--md-sys-motion-standard);
+    }
+
+    .surface-container:hover::before {
+      opacity: 1;
+    }
+
+    .surface-container:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--md-sys-elevation-3);
+      border-color: rgba(187, 134, 252, 0.3);
+    }
+
+    .input-label {
+      font-weight: 500;
+      color: var(--md-sys-color-on-surface);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      opacity: 0.9;
+    }
+
+    .material-icons {
+      font-family: 'Material Icons';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 20px;
+      color: var(--md-sys-color-primary);
+      vertical-align: middle;
+      display: inline-block;
+      line-height: 1;
+      text-transform: none;
+      letter-spacing: normal;
+      word-wrap: normal;
+      white-space: nowrap;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      -moz-osx-font-smoothing: grayscale;
+      font-feature-settings: 'liga';
+    }
+
+    textarea {
+      width: 100%;
+      height: 150px;
+      padding: 1rem;
+      background: var(--md-sys-color-surface-variant);
+      border: 2px solid var(--md-sys-color-outline-variant);
+      border-radius: var(--md-sys-shape-corner-medium);
+      font-family: 'Inter', monospace;
       font-size: 0.95rem;
+      color: var(--md-sys-color-on-surface);
+      resize: vertical;
+      transition: all 200ms var(--md-sys-motion-standard);
+      overflow-y: auto;
+      -webkit-user-select: text;
+      user-select: text;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--md-sys-color-primary);
+      background: var(--md-sys-color-surface-container-high);
+      box-shadow: 0 0 0 3px rgba(187, 134, 252, 0.2);
+    }
+
+    textarea::placeholder {
+      color: var(--md-sys-color-outline);
+      opacity: 0.7;
+    }
+
+    .button-group {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn {
+      position: relative;
+      padding: 0 24px;
+      height: 48px;
+      border: none;
+      border-radius: 24px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      letter-spacing: 0.1px;
+      cursor: pointer;
+      transition: all 200ms var(--md-sys-motion-standard);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      overflow: hidden;
+      text-transform: uppercase;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    .btn:active::before {
+      width: 300px;
+      height: 300px;
+    }
+
+    .btn-filled {
+      background: linear-gradient(135deg, var(--md-sys-color-primary) 0%, #9C27B0 100%);
+      color: #000000;
+      box-shadow: var(--md-sys-elevation-1);
+    }
+
+    .btn-filled:hover {
+      box-shadow: var(--md-sys-elevation-2);
+      transform: translateY(-1px);
+    }
+
+    .btn-filled:active {
+      transform: translateY(0);
+    }
+
+    .btn-tonal {
+      background: rgba(187, 134, 252, 0.15);
+      color: var(--md-sys-color-primary);
+      border: 1px solid rgba(187, 134, 252, 0.3);
+    }
+
+    .btn-tonal:hover {
+      background: rgba(187, 134, 252, 0.25);
+      border-color: rgba(187, 134, 252, 0.5);
+    }
+
+    .output-card {
+      background: rgba(187, 134, 252, 0.1);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border: 1px solid rgba(187, 134, 252, 0.2);
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(20px) scale(0.98);
+      transition: all 500ms var(--md-sys-motion-emphasized);
+    }
+
+    .output-card.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .output-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle, rgba(187, 134, 252, 0.3) 0%, transparent 70%);
+      animation: pulse 4s ease-in-out infinite;
+    }
+    .surface-container::before,
+    .output-card::before {
+      pointer-events: none;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.1); }
+    }
+
+    .output-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .output-title {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--md-sys-color-on-surface);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .output-count {
+      background: rgba(3, 218, 198, 0.2);
+      color: var(--md-sys-color-secondary);
+      padding: 0.375rem 1rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: 1px solid rgba(3, 218, 198, 0.3);
+    }
+
+    .output-content {
+      font-family: 'Inter', monospace;
+      font-size: 0.95rem;
+      line-height: 1.8;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 1.5rem;
+      border-radius: var(--md-sys-shape-corner-medium);
       min-height: 120px;
+      white-space: pre-wrap;
+      position: relative;
+      z-index: 1;
+      color: var(--md-sys-color-on-surface);
+      border: 1px solid var(--md-sys-color-outline-variant);
+    }
+
+    .empty-state {
+      text-align: center;
+      color: var(--md-sys-color-outline);
+      font-style: italic;
+    }
+
+    @media (max-width: 640px) {
+      h1 {
+        font-size: 1.25rem;
+      }
+
+      .container {
+        padding: 1.5rem 1rem;
+      }
+
+      .surface-container {
+        padding: 1.25rem;
+      }
+
+      .button-group {
+        grid-template-columns: 1fr;
+      }
+
+      .btn {
+        height: 52px;
+        font-size: 0.9375rem;
+      }
+    }
+
+    *:focus-visible {
+      outline: 2px solid var(--md-sys-color-primary);
+      outline-offset: 2px;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--md-sys-color-surface-variant);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--md-sys-color-outline-variant);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--md-sys-color-outline);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: -1px;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <!-- Header -->
-        <div class="bg-primary text-white py-3 rounded-top shadow-sm">
-          <h1 class="mb-0 text-center">GE Lottery Sort :)</h1>
-        </div>
-
-        <!-- Input Section -->
-        <div class="card shadow-sm mb-3">
-          <div class="card-body">
-            <div class="form-floating mb-3">
-              <textarea
-                class="form-control"
-                placeholder=""
-                id="input"
-                style="height: 150px"
-              ></textarea>
-              <label for="input">Paste Your List Here</label>
-            </div>
-            <button id="sortBtn" class="btn btn-success w-100">
-              Sort Entries
-            </button>
-          </div>
-        </div>
-
-        <!-- Output Section -->
-        <div class="card shadow-sm rounded-bottom">
-          <div class="card-header bg-secondary text-white">
-            Sorted Results
-          </div>
-          <div class="card-body card-output" id="output">
-            
-          </div>
-        </div>
+  <div class="background-gradient"></div>
+  
+  <header class="header">
+    <div class="header-content">
+      <div class="logo">
+        <div class="logo-icon">🎲</div>
+        <h1>GE Lottery Sort</h1>
       </div>
     </div>
-  </div>
+  </header>
 
-  <!-- Bootstrap 5 JS Bundle (integrity attributes removed) -->
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
-  ></script>
+  <main class="container">
+    <section class="surface-container" aria-label="Input section">
+      <label for="input" class="input-label">
+        <span class="material-icons">edit_note</span>
+        Enter Lottery Entries
+      </label>
+      <textarea 
+        id="input" 
+        placeholder="Example:&#10;John Doe – 42&#10;Jane Smith – 15&#10;Bob Johnson – 73"
+        aria-describedby="input-help"
+      ></textarea>
+      <span id="input-help" class="sr-only">Enter names followed by lottery numbers, one per line</span>
+      
+      <div class="button-group">
+        <button id="sortBtn" class="btn btn-filled" aria-label="Sort entries by number">
+          <span>Sort Entries</span>
+          <span class="material-icons">sort</span>
+        </button>
+        <button id="resetBtn" class="btn btn-tonal" aria-label="Clear all entries">
+          <span>Reset</span>
+          <span class="material-icons">refresh</span>
+        </button>
+      </div>
+    </section>
+
+    <section id="outputCard" class="surface-container output-card" aria-label="Sorted results" aria-live="polite">
+      <div class="output-header">
+        <h2 class="output-title">
+          <span class="material-icons">format_list_numbered</span>
+          Sorted Results
+        </h2>
+        <span id="entryCount" class="output-count">0 entries</span>
+      </div>
+      <div id="output" class="output-content">
+        <p class="empty-state">Results will appear here...</p>
+      </div>
+    </section>
+  </main>
 
   <script>
-    document.getElementById('sortBtn').addEventListener('click', () => {
-      const raw = document.getElementById('input').value.trim();
+    const sortBtn = document.getElementById('sortBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const inputEl = document.getElementById('input');
+    const outputEl = document.getElementById('output');
+    const outputCard = document.getElementById('outputCard');
+    const entryCount = document.getElementById('entryCount');
+
+    function animateButton(button) {
+      button.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        button.style.transform = '';
+      }, 100);
+    }
+
+    sortBtn.addEventListener('click', () => {
+      animateButton(sortBtn);
+      
+      const raw = inputEl.value.trim();
+      if (!raw) {
+        outputEl.innerHTML = '<p class="empty-state">Please enter some entries to sort...</p>';
+        outputCard.classList.add('visible');
+        entryCount.textContent = '0 entries';
+        
+        setTimeout(() => {
+          const headerHeight = document.querySelector('.header').offsetHeight;
+          const elementPosition = outputCard.getBoundingClientRect().top;
+          const offsetPosition = elementPosition + window.pageYOffset - headerHeight - 20;
+          
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+        }, 100);
+        return;
+      }
+
       const lines = raw.split('\n');
       const entries = [];
-
-      lines.forEach((line) => {
+      
+      lines.forEach(line => {
         const trimmed = line.trim();
         if (!trimmed) return;
-
-        const digitPattern = /\b([0-9]{1,2})\b/g;
-        const matches = [...trimmed.matchAll(digitPattern)];
-        if (matches.length === 0) return;
-
-        const lastMatch = matches[matches.length - 1];
-        const num = parseInt(lastMatch[1], 10);
-        const idx = lastMatch.index;
-
-        let namePart = trimmed.slice(0, idx).trim();
-        namePart = namePart.replace(/[-.\s]+$/, '').trim();
-        if (!namePart || namePart.length > 30) return;
-
-        entries.push({ name: namePart, value: num });
+        
+        const numbers = [...trimmed.matchAll(/\b(\d{1,3})\b/g)];
+        if (!numbers.length) return;
+        
+        const lastMatch = numbers[numbers.length - 1];
+        const value = parseInt(lastMatch[1], 10);
+        const numberIndex = lastMatch.index;
+        
+        let name = trimmed.slice(0, numberIndex).trim();
+        name = name.replace(/[-–—.\s]+$/, '').trim();
+        
+        if (name) {
+          entries.push({ name, value });
+        }
       });
 
       entries.sort((a, b) => a.value - b.value);
 
-      const outputLines = entries.map(
-        (e) => `${e.name} - ${String(e.value).padStart(2, '0')}`
-      );
-      document.getElementById('output').textContent =
-        outputLines.join('\n') || 'No valid entries found.';
+      let outputText = '';
+      if (entries.length > 0) {
+        outputText = entries
+          .map(entry => `${String(entry.value).padStart(3, ' ')}  ${entry.name}`)
+          .join('\n');
+        entryCount.textContent = `${entries.length} ${entries.length === 1 ? 'entry' : 'entries'}`;
+      } else {
+        outputText = 'No valid entries found.';
+        entryCount.textContent = '0 entries';
+      }
+
+      outputEl.textContent = outputText;
+      outputCard.classList.add('visible');
+      
+      setTimeout(() => {
+        const headerHeight = document.querySelector('.header').offsetHeight;
+        const elementPosition = outputCard.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerHeight - 20;
+        
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }, 100);
+    });
+
+    resetBtn.addEventListener('click', () => {
+      animateButton(resetBtn);
+      
+      inputEl.value = '';
+      outputEl.innerHTML = '<p class="empty-state">Results will appear here...</p>';
+      outputCard.classList.remove('visible');
+      entryCount.textContent = '0 entries';
+      inputEl.focus();
+    });
+
+    // Removed the paste listener so paste works normally
+
+    document.addEventListener('keydown', (e) => {
+      if (document.activeElement === inputEl && !e.ctrlKey && !e.metaKey) {
+        return;
+      }
+      
+      if (e.ctrlKey || e.metaKey) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          sortBtn.click();
+        } else if (e.key === 'r' || e.key === 'R') {
+          e.preventDefault();
+          resetBtn.click();
+        }
+      }
     });
   </script>
 </body>
